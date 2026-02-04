@@ -1,0 +1,110 @@
+---
+title: "explore"
+author: "André de Biasi"
+date: "2026-02-03"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(forcats)
+library(dplyr)
+library(janitor)
+library(lubridate)
+```
+
+
+```{r}
+df_cleared_2017 <- read.csv("./data/cleared_permits_2017.csv", na.strings=c("", NA)) |> 
+  clean_names() 
+```
+
+```{r}
+df_cleared_2017 |>
+  select(current_use) |>
+  unique() |>
+  filter(grepl("data", tolower(current_use), fixed = FALSE))
+
+current_uses_of_interest <- df_cleared_2017 |>
+  select(current_use) |>
+  unique() |>
+  filter(grepl("data", tolower(current_use), fixed = FALSE)) |>
+  pull(current_use)
+```
+```{r}
+df_cleared_2017 |>
+  select(proposed_use) |>
+  unique() |>
+  filter(grepl("data", tolower(proposed_use), fixed = FALSE))
+
+proposed_uses_of_interest <- df_cleared_2017 |>
+  select(proposed_use) |>
+  unique() |>
+  filter(grepl("data", tolower(proposed_use), fixed = FALSE)) |>
+  pull(proposed_use)
+```
+
+31 current uses that include the word "data".
+
+25 proposed uses that include the word "data".
+
+```{r}
+df_cleared_2017_filtered <- df_cleared_2017 |>
+  filter(
+    current_use %in% current_uses_of_interest | proposed_use %in% proposed_uses_of_interest
+  ) |>
+  mutate(street = paste(street_num, street_name, street_type)) |>
+  filter(current_use != "Sfd Datached") |>
+  mutate(proposed_use = ifelse(proposed_use == "Same", current_use, proposed_use))
+```
+
+126 records of interest:
+```{r}
+df_cleared_2017_filtered |>
+  select(
+    street,
+    current_use,
+    proposed_use,
+    builder_name
+  ) |>
+  unique()
+```
+
+57 unique:
+```{r}
+df_cleared_2017_filtered |>
+  select(
+    street,
+    current_use,
+    proposed_use,
+    description
+  ) |>
+  unique() |>
+  group_by(street) |>
+  count(proposed_use)
+```
+
+```{r}
+df_cleared_2017_filtered |>
+  select(
+    current_use
+  ) |>
+  count(current_use) |>
+  arrange(desc(n))
+```
+
+```{r}
+df_cleared_2017_filtered |>
+  select(
+    proposed_use
+  ) |>
+  count(proposed_use) |>
+  arrange(desc(n))
+```
+
+
+
+```{r}
+```
+
