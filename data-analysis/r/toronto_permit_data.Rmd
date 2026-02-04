@@ -16,7 +16,7 @@ library(lubridate)
 
 
 ```{r}
-df_cleared_2017 <- read.csv("./data/cleared_permits_2017.csv", na.strings=c("", NA)) |> 
+df_cleared_2017 <- read.csv("../data/cleared_permits_2017.csv", na.strings=c("", NA)) |> 
   clean_names() 
 ```
 
@@ -104,7 +104,7 @@ df_cleared_2017_filtered |>
 ```
 
 
-
+Many data points seem to be related to office buildings. Filter them out. 
 ```{r}
 ```
 
